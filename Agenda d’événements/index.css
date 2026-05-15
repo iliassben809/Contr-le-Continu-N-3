@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════
-   VARIABLES CSS
+          VARIABLES CSS
 ═══════════════════════════════════════════ */
 :root {
   --bg: #0d0d0d;
@@ -21,7 +21,7 @@
 }
 
 /* ═══════════════════════════════════════════
-   RESET & BASE
+           RESET & BASE
 ═══════════════════════════════════════════ */
 * {
   box-sizing: border-box;
@@ -37,7 +37,7 @@ body {
 }
 
 /* ═══════════════════════════════════════════
-   HEADER
+                HEADER
 ═══════════════════════════════════════════ */
 header {
   background: var(--surface);
@@ -70,7 +70,7 @@ header h1 span {
 }
 
 /* ═══════════════════════════════════════════
-   STATS BAR
+         STATS BAR
 ═══════════════════════════════════════════ */
 .stats-bar {
   display: flex;
@@ -96,7 +96,7 @@ header h1 span {
 }
 
 /* ═══════════════════════════════════════════
-   LAYOUT PRINCIPAL
+           LAYOUT PRINCIPAL
 ═══════════════════════════════════════════ */
 .main-wrap {
   display: grid;
@@ -106,7 +106,7 @@ header h1 span {
 }
 
 /* ═══════════════════════════════════════════
-   SIDEBAR (FORMULAIRE)
+            SIDEBAR (FORMULAIRE)
 ═══════════════════════════════════════════ */
 .sidebar {
   background: var(--surface);
@@ -162,7 +162,7 @@ textarea.form-control {
   min-height: 80px;
 }
 
-/* Remplacement de mb-3 (Bootstrap) */
+/* Remplace mb-3 Bootstrap */
 .form-group {
   margin-bottom: 1rem;
 }
@@ -228,7 +228,7 @@ textarea.form-control {
 }
 
 /* ═══════════════════════════════════════════
-   CONTENU PRINCIPAL
+             CONTENU PRINCIPAL
 ═══════════════════════════════════════════ */
 .content {
   padding: 1.8rem 2rem;
@@ -301,7 +301,7 @@ textarea.form-control {
   border: 1px solid var(--border);
   border-radius: 8px;
   overflow: hidden;
-  margin-left: auto; /* pousse le toggle à droite (remplace ms-auto Bootstrap) */
+  margin-left: auto;
 }
 
 .view-btn {
@@ -328,10 +328,8 @@ textarea.form-control {
 }
 
 /* ═══════════════════════════════════════════
-   CARTES ÉVÉNEMENTS
+            CARTES ÉVÉNEMENTS
 ═══════════════════════════════════════════ */
-
-/* Vue grille */
 #events-container.grid-view {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -372,7 +370,7 @@ textarea.form-control {
   }
 }
 
-/* Bande colorée en haut (grid) */
+
 .card-stripe {
   height: 4px;
   width: 100%;
@@ -382,7 +380,7 @@ textarea.form-control {
   padding: 1.1rem 1.2rem;
 }
 
-/* Meta (badge catégorie + date) */
+
 .event-meta {
   display: flex;
   align-items: center;
@@ -517,7 +515,7 @@ textarea.form-control {
 }
 
 /* ═══════════════════════════════════════════
-   COULEURS CATÉGORIES
+              COULEURS CATÉGORIES
 ═══════════════════════════════════════════ */
 .cat-work {
   background: rgba(74, 144, 217, 0.15);
@@ -565,7 +563,7 @@ textarea.form-control {
 }
 
 /* ═══════════════════════════════════════════
-   TOAST NOTIFICATIONS
+               NOTIFICATIONS
 ═══════════════════════════════════════════ */
 .toast-wrap {
   position: fixed;
@@ -617,21 +615,18 @@ textarea.form-control {
 }
 
 /* ═══════════════════════════════════════════
-   MODAL (sans Bootstrap)
+                     MODALE 
 ═══════════════════════════════════════════ */
-
-/* Overlay sombre sur toute la page */
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.65);
+  background: rgba(0,0,0,0.65);
   z-index: 500;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* Boîte centrale */
 .modal-box {
   background: var(--card);
   border: 1px solid var(--border);
@@ -662,7 +657,6 @@ textarea.form-control {
   color: var(--muted);
   cursor: pointer;
   font-size: 1rem;
-  line-height: 1;
   transition: color 0.2s;
 }
 .modal-box .btn-close-modal:hover { color: var(--text); }
@@ -681,12 +675,10 @@ textarea.form-control {
   border-top: 1px solid var(--border);
 }
 
-/* Boutons dans la modale : taille auto */
 .modal-box .btn-cancel { width: auto; margin: 0; }
-.modal-box .btn-add    { width: auto; }
 
 /* ═══════════════════════════════════════════
-   SCROLLBAR PERSONNALISÉE
+          SCROLLBAR PERSONNALISÉE
 ═══════════════════════════════════════════ */
 ::-webkit-scrollbar {
   width: 5px;
@@ -703,7 +695,7 @@ textarea.form-control {
 }
 
 /* ═══════════════════════════════════════════
-   RESPONSIVE
+               RESPONSIVE
 ═══════════════════════════════════════════ */
 @media (max-width: 900px) {
   .main-wrap {
