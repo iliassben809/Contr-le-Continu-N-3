@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Agenda d'Événements</title>
+
+  <!-- Bootstrap Icons (gardé pour les icônes seulement) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet"/>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="index.css"/>
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════
+       HEADER
+  ══════════════════════════════════════ -->
+  <header>
+    <h1><span>Agenda</span> d'Événements</h1>
+    <div class="header-date" id="today-date"></div>
+  </header>
+
+  <!-- ══════════════════════════════════════
+       STATS BAR
+  ══════════════════════════════════════ -->
+  <div class="stats-bar">
+    <div class="stat-chip">Total : <strong id="stat-total">0</strong></div>
+    <div class="stat-chip">Aujourd'hui : <strong id="stat-today">0</strong></div>
+    <div class="stat-chip">Cette semaine : <strong id="stat-week">0</strong></div>
+    <div class="stat-chip">Travail : <strong id="stat-work">0</strong></div>
+    <div class="stat-chip">Personnel : <strong id="stat-perso">0</strong></div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       MAIN LAYOUT
+  ══════════════════════════════════════ -->
+  <div class="main-wrap">
+
+    <!-- ── SIDEBAR : FORMULAIRE ── -->
+    <aside class="sidebar">
+      <h2 id="form-title"><i class="bi bi-plus-circle"></i> Ajouter un événement</h2>
+
+      <!-- كل div.form-group هو حقل واحد : label + input -->
+      <div class="form-group">
+        <label class="form-label">Titre *</label>
+        <input type="text" class="form-control" id="inp-title" placeholder="Réunion d'équipe..." maxlength="60"/>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Date *</label>
+        <input type="date" class="form-control" id="inp-date"/>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Heure</label>
+        <input type="time" class="form-control" id="inp-time"/>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Catégorie</label>
+        <select class="form-select" id="inp-cat">
+          <option value="travail">💼 Travail</option>
+          <option value="perso">🏠 Personnel</option>
+          <option value="sante">❤️ Santé</option>
+          <option value="social">🎉 Social</option>
+          <option value="autre">📌 Autre</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Description</label>
+        <textarea class="form-control" id="inp-desc" placeholder="Détails de l'événement..."></textarea>
+      </div>
+
+      <!-- Champ caché : stocke l'id de l'événement en cours de modification -->
+      <input type="hidden" id="edit-id"/>
+
+      <button class="btn-add" onclick="saveEvent()">
+        <i class="bi bi-check2-circle"></i>
+        <span id="btn-label">Ajouter l'événement</span>
+      </button>
+
+      <button class="btn-cancel" id="cancel-btn" style="display:none" onclick="cancelEdit()">
+        Annuler la modification
+      </button>
+
+      <hr class="divider"/>
+
+      <!-- <p class="info-note">
+        <i class="bi bi-info-circle"></i>
+        Les données sont sauvegardées dans votre navigateur via
+        <strong>localStorage</strong>.
+      </p> -->
+    </aside>
+
+    <!-- ── CONTENU PRINCIPAL ── -->
+    <main class="content">
+
+      <!-- Toolbar : recherche + filtres par catégorie + bascule vue -->
+      <div class="toolbar">
+
+        <!-- Champ de recherche avec icône -->
+        <div class="search-wrap">
+          <i class="bi bi-search"></i>
+          <input
+            type="text"
+            class="search-input"
+            id="search-input"
+            placeholder="Rechercher un événement..."
+            oninput="renderEvents()"
+          />
+        </div>
+
+        <!-- Boutons de filtre par catégorie -->
+        <button class="filter-btn active" data-filter="all"     onclick="setFilter(this)">Tous</button>
+        <button class="filter-btn"        data-filter="travail" onclick="setFilter(this)">💼 Travail</button>
+        <button class="filter-btn"        data-filter="perso"   onclick="setFilter(this)">🏠 Perso</button>
+        <button class="filter-btn"        data-filter="sante"   onclick="setFilter(this)">❤️ Santé</button>
+        <button class="filter-btn"        data-filter="social"  onclick="setFilter(this)">🎉 Social</button>
+
+        <!-- Bascule entre vue grille et vue liste -->
+        <div class="view-toggle">
+          <button class="view-btn active" id="view-grid" onclick="setView('grid')" title="Grille">
+            <i class="bi bi-grid-3x3-gap"></i>
+          </button>
+          <button class="view-btn" id="view-list" onclick="setView('list')" title="Liste">
+            <i class="bi bi-list-ul"></i>
+          </button>
+        </div>
+
+      </div>
+
+      <div class="section-label" id="results-label">Tous les événements</div>
+
+      <!-- Zone des cartes (remplie dynamiquement par JS) -->
+      <div id="events-container" class="grid-view"></div>
+
+    </main>
+  </div><!-- /main-wrap -->
+
+  <!-- ══════════════════════════════════════
+       TOAST CONTAINER
+  ══════════════════════════════════════ -->
+  <div class="toast-wrap" id="toast-wrap"></div>
+
+  <!-- ══════════════════════════════════════
+       MODAL : CONFIRMATION SUPPRESSION
+       Structure simple sans Bootstrap :
+       overlay (fond sombre) > modal-box (boîte)
+  ══════════════════════════════════════ -->
+  <div class="modal-overlay" id="deleteModal" style="display:none" onclick="closeModalOnOverlay(event)">
+    <div class="modal-box">
+
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="bi bi-exclamation-triangle" style="color:#d4a030"></i>
+          Confirmer la suppression
+        </h5>
+        <!-- Bouton X pour fermer -->
+        <button class="btn-close-modal" onclick="closeModal()">&#x2715;</button>
+      </div>
+
+      <div class="modal-body">
+        Voulez-vous vraiment supprimer cet événement ? Cette action est irréversible.
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-cancel" onclick="closeModal()">Annuler</button>
+        <button class="btn-add" style="background:var(--danger)" id="confirm-delete-btn">
+          <i class="bi bi-trash"></i> Supprimer
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Script principal (pas de Bootstrap JS) -->
+  <script src="index.js"></script>
+
+</body>
+</html>
