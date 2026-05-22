@@ -10,10 +10,18 @@ var currentView = "grid";
 var deleteTargetId = "";
 
 // ── Utilitaires ──
-var $ = function(id) { return document.getElementById(id); };
-var genId = function() { return Date.now() + "" + Math.floor(Math.random() * 1000); };
-var getToday = function() { return new Date().toISOString().slice(0, 10); };
-var formatDate = function(s) { return s ? s.split("-").reverse().join("/") : ""; };
+var $ = function(id) {
+    return document.getElementById(id); 
+};
+var genId = function() {
+    return Date.now() + "" + Math.floor(Math.random() * 1000); 
+};
+var getToday = function() {
+    return new Date().toISOString().slice(0, 10); 
+};
+var formatDate = function(s) {
+    return s ? s.split("-").reverse().join("/") : ""; 
+};
 
 // ── Catégories ──
 var CAT = {
@@ -24,9 +32,15 @@ var CAT = {
 };
 
 var getCat = function(cat, key) {
-    if (CAT[cat]) { return CAT[cat][key]; }
-    if (key === "cls")   { return "autre"; }
-    if (key === "label") { return "📌 Autre"; }
+    if (CAT[cat]) {
+        return CAT[cat][key]; 
+    }
+    if (key === "cls")   {
+        return "autre"; 
+    }
+    if (key === "label") {
+        return "📌 Autre"; 
+    }
 };
 
 
@@ -58,8 +72,12 @@ var clearForm = function() {
 function saveEvent() {
     var f = getForm();
 
-    if (!f.title) { showToast("Le titre est obligatoire.", "danger"); return; }
-    if (!f.date)  { showToast("La date est obligatoire.", "danger");  return; }
+    if (!f.title) {
+        showToast("Le titre est obligatoire.", "danger"); return; 
+    }
+    if (!f.date)  {
+        showToast("La date est obligatoire.", "danger");  return; 
+    }
 
     if (f.editId) {
         for (var i = 0; i < events.length; i++) {
@@ -74,7 +92,14 @@ function saveEvent() {
         cancelEdit();
         showToast("Événement modifié avec succès.", "success");
     } else {
-        var newEvent = { id: genId(), title: f.title, date: f.date, time: f.time, cat: f.cat, desc: f.desc };
+        var newEvent = {
+            id: genId(),
+            title: f.title,
+            date: f.date,
+            time: f.time,
+            cat: f.cat,
+            desc: f.desc 
+        };
         events.unshift(newEvent);
         clearForm();
         showToast("Événement ajouté avec succès.", "success");
@@ -88,9 +113,13 @@ function saveEvent() {
 function startEdit(id) {
     var ev = null;
     for (var i = 0; i < events.length; i++) {
-        if (events[i].id === id) { ev = events[i]; }
+        if (events[i].id === id) {
+            ev = events[i]; 
+        }
     }
-    if (!ev) { return; }
+    if (!ev) {
+        return; 
+    }
 
     $("inp-title").value = ev.title;
     $("inp-date").value  = ev.date;
@@ -124,14 +153,18 @@ function closeModal() {
 }
 
 function closeModalOnOverlay(event) {
-    if (event.target === $("deleteModal")) { closeModal(); }
+    if (event.target === $("deleteModal")) {
+        closeModal(); 
+    }
 }
 
 $("confirm-delete-btn").addEventListener("click", function() {
     if (!deleteTargetId) { return; }
     var newEvents = [];
     for (var i = 0; i < events.length; i++) {
-        if (events[i].id !== deleteTargetId) { newEvents.push(events[i]); }
+        if (events[i].id !== deleteTargetId) {
+            newEvents.push(events[i]); 
+        }
     }
     events = newEvents;
     saveEvents();
@@ -178,8 +211,12 @@ function renderEvents() {
     }
 
     filtered.sort(function(a, b) {
-        if (a.date < b.date) { return -1; }
-        if (a.date > b.date) { return  1; }
+        if (a.date < b.date) {
+            return -1; 
+        }
+        if (a.date > b.date) {
+            return  1; 
+        }
         return 0;
     });
 
@@ -189,7 +226,9 @@ function renderEvents() {
         $("events-container").innerHTML = '<div class="empty-state"><i class="bi bi-calendar-x"></i><p>Aucun événement trouvé.<br>Ajoutez-en un depuis le formulaire.</p></div>';
     } else {
         var html = "";
-        for (var j = 0; j < filtered.length; j++) { html += buildCard(filtered[j]); }
+        for (var j = 0; j < filtered.length; j++) {
+            html += buildCard(filtered[j]); 
+        }
         $("events-container").innerHTML = html;
     }
 }
@@ -229,7 +268,9 @@ function updateStats() {
 // ── Filtres & Vue ──
 function setFilter(btn) {
     var btns = document.querySelectorAll(".filter-btn");
-    for (var i = 0; i < btns.length; i++) { btns[i].classList.remove("active"); }
+    for (var i = 0; i < btns.length; i++) {
+        btns[i].classList.remove("active"); 
+    }
     btn.classList.add("active");
     currentFilter = btn.dataset.filter;
     renderEvents();
@@ -255,7 +296,9 @@ function showToast(msg, type) {
     el.className = "toast-msg " + type;
     el.innerHTML = '<i class="bi bi-' + icon + '"></i> ' + msg;
     $("toast-wrap").appendChild(el);
-    setTimeout(function() { el.remove(); }, 2800);
+    setTimeout(function() {
+        el.remove(); 
+    }, 2800);
 }
 
 // ── Démarrage ──
@@ -269,10 +312,38 @@ if (events.length === 0) {
     tom.setDate(tom.getDate() + 1);
     var tomS = tom.toISOString().slice(0, 10);
     events = [
-        { id: genId(), title: "Réunion hebdomadaire", date: getToday(), time: "09:00", cat: "travail", desc: "Revue du sprint avec l'équipe." },
-        { id: genId(), title: "Rendez-vous médecin",  date: tomS,       time: "14:30", cat: "sante",   desc: "Consultation annuelle."         },
-        { id: genId(), title: "Anniversaire de Sara", date: tomS,       time: "19:00", cat: "social",  desc: "Fête surprise chez les parents." },
-        { id: genId(), title: "Sport — salle de gym", date: getToday(), time: "18:00", cat: "perso",   desc: "Séance cardio + musculation."    }
+        {
+            id: genId(),
+            title: "Réunion hebdomadaire",
+            date: getToday(),
+            time: "09:00",
+            cat: "travail
+            desc: "Revue du sprint avec l'équipe." 
+        },
+        {
+           id: genId(),
+           title: "Rendez-vous médecin",
+           date: tomS,       
+           time: "14:30",
+           cat: "sante", 
+           desc: "Consultation annuelle."         
+        },
+        {
+            id: genId(),
+            title: "Anniversaire de Sara",
+            date: tomS,
+            time: "19:00",
+            cat: "social",
+            desc: "Fête surprise chez les parents." 
+        },
+        {
+            id: genId(),
+            title: "Sport — salle de gym",
+            date: getToday(),
+            time: "18:00",
+            cat: "perso",
+            desc: "Séance cardio + musculation."    
+        }
     ];
     saveEvents();
 }
